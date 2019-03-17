@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2019 Dawid Drozd aka Gelldur
+#include <version/Build.h>
+
+namespace Build
+{
+namespace Git
+{
+
+std::string_view getTag()
+{
+	return "@GIT_COMMIT_TAG@";
+}
+
+std::string_view getSHA1Short()
+{
+	return "@GIT_SHORT_SHA1@";
+}
+
+std::string_view getSHA1Full()
+{
+	return "@GIT_LONG_SHA1@";
+}
+
+std::string_view getCommitDate()
+{
+	return "@GIT_COMMIT_DATE@";
+}
+
+std::uint32_t getCommitCount()
+{
+	return @GIT_COMMIT_COUNT@;
+}
+
+bool isDirty()
+{
+	return @GIT_IS_DIRTY@;
+}
+
+} // namespace Git
+
+std::string_view getVersion()
+{
+	return "@BUILD_VERSION@";
+}
+
+std::string_view getVersionDate()
+{
+	return __DATE__ " " __TIME__;
+	//return "@BUILD_VERSION_DATE@";
+}
+
+} // namespace Build
