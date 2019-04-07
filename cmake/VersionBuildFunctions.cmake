@@ -6,6 +6,9 @@ if(___GUARD_version_build_functions)
 endif()
 set(___GUARD_version_build_functions YES)
 
+get_filename_component(_VERSION_ROOT ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
+# message("_VERSION_ROOT path: ${_VERSION_ROOT}")
+
 # the date of the HEAD commit
 function(git_commit_date _var)
 	if(NOT GIT_FOUND)
@@ -160,10 +163,6 @@ function(version_for target)
 	message("GIT_SHORT_SHA1: " ${GIT_SHORT_SHA1})
 	message("GIT_COMMIT_DATE: " ${GIT_COMMIT_DATE})
 	message("GIT_IS_DIRTY: " ${GIT_IS_DIRTY})
-
-
-	get_filename_component(_VERSION_ROOT ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
-	# message("_VERSION_ROOT path: ${_VERSION_ROOT}")
 
 	configure_file(${_VERSION_ROOT}/src/version/Build.cpp.in gen/src/version/Build.cpp @ONLY)
 
