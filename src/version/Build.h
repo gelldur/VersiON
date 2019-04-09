@@ -29,4 +29,14 @@ bool isDirty();
 std::string_view getVersion();
 std::string_view getDate();
 
+namespace Environment
+{
+std::string_view getCompiler();
+std::string_view getArchitecture();
+std::string_view getSystem();
+std::string_view getCMake();
+} // namespace Environment
+
+void printFullInformation(std::ostream& output);
+
 } // namespace Build

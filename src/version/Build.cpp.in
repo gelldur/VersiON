@@ -2,6 +2,8 @@
 // Copyright © 2019 Dawid Drozd aka Gelldur
 #include <version/Build.h>
 
+#include <ostream>
+
 namespace Build
 {
 namespace Git
@@ -38,6 +40,50 @@ std::string_view getDate()
 {
 	return __DATE__ " " __TIME__;
 	//return "@BUILD_VERSION_DATE@";
+}
+
+namespace Environment
+{
+
+std::string_view getCompiler()
+{
+	return "@CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@";
+}
+
+std::string_view getArchitecture()
+{
+	return "@CMAKE_SYSTEM_PROCESSOR@";
+}
+
+std::string_view getSystem()
+{
+	return "@CMAKE_SYSTEM@";
+}
+
+std::string_view getCMake()
+{
+	return "@CMAKE_VERSION@";
+}
+
+} // namespace Environment
+
+void printFullInformation(std::ostream& output)
+{
+	output << "Build information:\n------------------\n"
+		   << "Version: " << getVersion() << "\n"
+		   << "Build date: " << getDate() << "\n"
+		   << "# Git information\n"
+		   << "\tSHA1: " << Git::getSHA1Short() << "\n"
+		   << "\tCommit date: " << Git::getCommitDate() << "\n";
+	if(Git::isDirty())
+	{
+		output << "\tBuild was made on DIRTY repository !!!\n";
+	}
+	output << "# Build Environment\n"
+		   << "\tCompiler: " << Environment::getCompiler() << "\n"
+		   << "\tCMake: " << Environment::getCMake() << "\n"
+		   << "\tArchitecture: " << Environment::getArchitecture() << "\n"
+		   << "\tSystem: " << Environment::getSystem() << "\n";
 }
 
 } // namespace Build

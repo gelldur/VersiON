@@ -13,5 +13,9 @@ int main()
 	std::cout << "Git::getSHA1Full: " << Build::Git::getSHA1Full() << std::endl;
 	std::cout << "Git::getCommitDate: " << Build::Git::getCommitDate() << std::endl;
 	std::cout << "Git::isDirty: " << Build::Git::isDirty() << std::endl;
+
+	std::cout << "\n\n\n" << std::endl;
+	Build::printFullInformation(std::cout);
+	std::cout << std::endl;
 	return 0;
 }
