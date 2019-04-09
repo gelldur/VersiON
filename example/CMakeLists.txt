@@ -10,7 +10,7 @@ include(VersionBuildFunctions)
 add_executable(MyApp src/main.cpp)
 
 # Everything you need ########
-version_for(MyApp)    ########
+version_for(MyApp)    ######## is love <3
 ##############################
 
 set_target_properties(MyApp
