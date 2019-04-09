@@ -18,7 +18,9 @@ Designed to work with pure CLI, Clion, CMake, C++
 - Minimize risk of deploy uncommited changes
 - Easy add to current project
 - Nice & easy rules
-
+- Should be able to express change to which component ? Maybe multiple apps in 1 repository.
+- Verify that git tag was pushed
+- Support change of versioning convention
 
 ## How to add to your project
 
