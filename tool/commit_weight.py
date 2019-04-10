@@ -1,11 +1,10 @@
 import re
 import logging
-from versioning import Versioning
 
 
-def weight_of_commits(versioning, commits):
+def weight_of_commits(versioning_style, commits):
     logger = logging.getLogger('release')
-    if versioning == Versioning.Semantic:
+    if versioning_style == 'semantic':
         major = 0
         minor = 0
         patch = 0
@@ -25,7 +24,7 @@ def weight_of_commits(versioning, commits):
         if minor > 0:
             return minor * 1000
         return patch
-    elif versioning == Versioning.Revision:
+    elif versioning_style == 'revision':
         # Revision versioning is interested only in changes count
         return len(commits)
     return 0
@@ -38,33 +37,30 @@ commit_minor = 'Update log API\n\n[MINOR] Foo bar fo fo bar'
 commit_patch = 'Fix memory corruption\n\n[PATCH] Blah blah blah'
 commit_none = 'Refactor code\n\nWaiting too long with this change'
 
-assert weight_of_commits(Versioning.Semantic, [commit_major]) == 1000000
-assert weight_of_commits(Versioning.Semantic, [commit_minor]) == 1000
-assert weight_of_commits(Versioning.Semantic, [commit_patch]) == 1
-assert weight_of_commits(Versioning.Semantic, [commit_none]) == 1
+assert weight_of_commits('semantic', [commit_major]) == 1000000
+assert weight_of_commits('semantic', [commit_minor]) == 1000
+assert weight_of_commits('semantic', [commit_patch]) == 1
+assert weight_of_commits('semantic', [commit_none]) == 1
 
-assert weight_of_commits(Versioning.Semantic, [
-                         commit_major, commit_major]) == 1000000
-assert weight_of_commits(Versioning.Semantic, [
-                         commit_minor, commit_minor]) == 2000
-assert weight_of_commits(Versioning.Semantic, [
-                         commit_patch, commit_patch]) == 2
-assert weight_of_commits(Versioning.Semantic, [commit_none, commit_none]) == 1
+assert weight_of_commits('semantic', [commit_major, commit_major]) == 1000000
+assert weight_of_commits('semantic', [commit_minor, commit_minor]) == 2000
+assert weight_of_commits('semantic', [commit_patch, commit_patch]) == 2
+assert weight_of_commits('semantic', [commit_none, commit_none]) == 1
 
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_major, commit_major, commit_minor]) == 1000000
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_minor, commit_minor, commit_patch]) == 2000
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_patch, commit_patch, commit_none]) == 2
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_none, commit_none, commit_none]) == 1
 
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_major, commit_major, commit_patch]) == 1000000
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_minor, commit_minor, commit_major]) == 1000000
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_patch, commit_minor, commit_none]) == 1000
-assert weight_of_commits(Versioning.Semantic, [
+assert weight_of_commits('semantic', [
                          commit_patch, commit_none, commit_none]) == 1

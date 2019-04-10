@@ -139,7 +139,7 @@ endfunction()
 ################################################################################
 ################################################################################
 
-function(version_for target)
+function(version_for target style)
 	if(NOT TARGET ${target})
 		message(FATAL_ERROR "Target not definied: ${target}")
 		return()
@@ -149,13 +149,24 @@ function(version_for target)
 	git_short_sha1(GIT_SHORT_SHA1)
 	git_commit_date(GIT_COMMIT_DATE)
 
-	git_current_tag(${target} BUILD_VERSION)
+	execute_process(COMMAND
+		"${_VERSION_ROOT}/tool/get_build_version.py" --pattern-name=${style} --name=${target} --enable-rc
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+		OUTPUT_VARIABLE BUILD_VERSION
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+
+	if(NOT BUILD_VERSION)
+		message(WARNING "Can't get version")
+	endif()
 
 	set(GIT_IS_DIRTY "false")
 	git_local_changes(DIRTY)
 	if(DIRTY STREQUAL "DIRTY")
 		set(GIT_IS_DIRTY "true")
-		message(WARNING "Current build is dirty it shouldn't be released!")
+		if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+			message(WARNING "Current build is dirty it shouldn't be released!")
+		endif()
 	endif()
 
 	message("BUILD_VERSION: " ${BUILD_VERSION})

@@ -1,11 +1,6 @@
 #!/bin/python3
-#
+
 # pip install --user gitpython
-#
-# How to use this script
-# ----------------------
-# Please run it in your project root directory (git root of project)
-# ./3rdparty/version/tool/release.py --dry-run --verbose --name=MyApp --pattern-name=revision
 
 import logging
 import git
@@ -14,19 +9,15 @@ import common
 from pprint import pprint
 
 from versioning import *
-from commit_weight import *
-from bump_style import bump_version
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--sha1", help="pass sha1 of commit which should be marked as release, by default HEAD")
     parser.add_argument(
         "--pattern-name", help="Example: revision, semantic")
     parser.add_argument(
         "--name", help="Example: MyApp")
     parser.add_argument(
-        "--dry-run", help="Simulate what would be done", action="store_true")
+        "--enable-rc", help="add sufix '-rc' when version isn't released", action="store_true")
     parser.add_argument(
         "--verbose", help="", action="store_true")
 
@@ -34,9 +25,9 @@ if __name__ == "__main__":
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.ERROR)
 
-    logger = logging.getLogger('release')
+    logger = logging.getLogger(__file__)
     ################################################################################################
     ################################################################################################
     versioning_patterns = load_versioning_patterns()
@@ -54,21 +45,17 @@ if __name__ == "__main__":
     if not common.check_versioning_style(args.pattern_name, versioning_patterns):
         exit(1)
 
-    if previous_release_tag is not None and what_versioning(versioning_patterns, previous_release_tag) != args.pattern_name:
-        logger.error("Different versioning!")
-        raise Exception()
-
     start_commit, end_commit, commits_to_release_messages = common.get_commits_message(
         repo, None, previous_release_tag)
 
     if len(commits_to_release_messages) < 1:
+        print(new_release_tag)
         exit(0)
 
     new_release_tag = common.generate_new_version(start_commit, end_commit, args.pattern_name,
                                                   commits_to_release_messages, prefix,
                                                   previous_release_tag, versioning_patterns)
-    if len(new_release_tag) < 1:
-        exit(0)
-
-    if not args.dry_run:
-        repo.create_tag(new_release_tag, start_commit)
+    if args.enable_rc and new_release_tag not in repo.tags:
+        print(f"{new_release_tag}-rc")
+    else:
+        print(new_release_tag)

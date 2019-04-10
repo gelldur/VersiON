@@ -1,42 +1,34 @@
 import re
+import logging
+import configparser
 from enum import Enum
 
 
-class Versioning(Enum):
-    Semantic = 1
-    Revision = 2
+def load_versioning_patterns():
+    import os
+    from pathlib import Path
+    root_path = Path(os.path.dirname(os.path.abspath(__file__))).parent
+    version_patterns = root_path / 'config' / 'version_patterns.ini'
+    config = configparser.ConfigParser()
+    config.read(version_patterns)
+
+    logger = logging.getLogger(__name__)
+
+    for section in config.sections():
+        pattern = config[section]['pattern']
+        regex = config[section]['regex']
+        logger.debug(f"Section {section}")
+        logger.debug(f"\tpattern: {pattern} with regex: {regex}")
+        regex = re.compile(regex)
+        assert regex.match(pattern) is not None
+    return config
 
 
-# Semantic versioning
-# example: v1.0.2 v[MAJOR.MINOR.PATCH]
-versioning_semantic = re.compile(r"(.+?)?v([0-9]+).([0-9]+).([0-9]+)$")
-
-# Revision versioning (changes count)
-# example: r241 r[REVISION_NUMBER]
-versioning_revision = re.compile("(.+?)?r([0-9]+)$")
-
-
-def what_versioning(version_pattern):
-    if versioning_semantic.match(version_pattern):
-        return Versioning.Semantic
-
-    if versioning_revision.match(version_pattern):
-        return Versioning.Revision
-    raise Exception("Unknown versioning pattern: {}".format(version_pattern))
-
-
-def extract_prefix(version_pattern):
-    if versioning_semantic.match(version_pattern):
-        return versioning_semantic.search(version_pattern).group(1)
-
-    if versioning_revision.match(version_pattern):
-        return versioning_revision.search(version_pattern).group(1)
-    raise Exception("Unknown versioning pattern: {}".format(version_pattern))
-
-
-#############################################################
-# Quick test
-assert what_versioning('v1.0.0') == Versioning.Semantic
-assert what_versioning('v0.0.0') == Versioning.Semantic
-assert what_versioning('r1') == Versioning.Revision
-assert what_versioning('r100') == Versioning.Revision
+def what_versioning(versioning_patterns, version_pattern):
+    for section in versioning_patterns.sections():
+        pattern = versioning_patterns[section]['pattern']
+        regex = versioning_patterns[section]['regex']
+        regex = re.compile(regex)
+        if regex.match(version_pattern) is not None:
+            return section
+    raise Exception(f"Unknown versioning pattern: {version_pattern}")
