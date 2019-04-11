@@ -1,4 +1,5 @@
-# version
+# ![VersiON](./VersiON-logo.svg)
+
 
 Bunch of scripts & tools to make release life easier.
 Designed to work with pure CLI, Clion, CMake, C++
