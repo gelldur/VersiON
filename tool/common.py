@@ -78,7 +78,8 @@ def get_commits_message(repo, last_commit_sha1, previous_release_tag):
 
 
 def generate_new_version(start_commit, end_commit, pattern_name, commits_to_release_messages, prefix, previous_release_tag, versioning_patterns):
-    weight = weight_of_commits(pattern_name, commits_to_release_messages)
+    weight = weight_of_commits(
+        versioning_patterns, pattern_name, commits_to_release_messages)
     logger.debug(
         f"Weight of commits: {start_commit}{end_commit} is {weight}")
     if weight <= 0:

@@ -185,7 +185,6 @@ function(version_for target style)
 		${_target_bin_dir}/gen/src/version/Build.cpp
 		)
 
-
 	target_include_directories("${target}_version" PUBLIC
 		${_VERSION_ROOT}/src/
 		)
