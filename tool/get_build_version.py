@@ -13,6 +13,8 @@ from versioning import *
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--config", help="Config file path, if not specified then default used. Check config/")
+    parser.add_argument(
         "--pattern-name", help="Example: revision, semantic")
     parser.add_argument(
         "--name", help="Example: MyApp")
@@ -30,7 +32,7 @@ if __name__ == "__main__":
     logger = logging.getLogger(__file__)
     ################################################################################################
     ################################################################################################
-    versioning_patterns = load_versioning_patterns()
+    versioning_patterns = load_versioning_patterns(args.config)
 
     prefix = '' if args.name is None else args.name + '-'
 

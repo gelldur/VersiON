@@ -4,13 +4,17 @@ import configparser
 from enum import Enum
 
 
-def load_versioning_patterns():
+def load_versioning_patterns(config_path=None):
     import os
     from pathlib import Path
-    root_path = Path(os.path.dirname(os.path.abspath(__file__))).parent
-    version_patterns = root_path / 'config' / 'version_patterns.ini'
+
     config = configparser.ConfigParser()
-    config.read(version_patterns)
+    if config_path is None:
+        root_path = Path(os.path.dirname(os.path.abspath(__file__))).parent
+        version_patterns = root_path / 'config' / 'version_patterns.ini'
+        config.read(version_patterns)
+    else:
+        config.read(config_path)
 
     logger = logging.getLogger(__name__)
 
