@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--name", help="Example: MyApp")
     parser.add_argument(
-        "--enable-rc", help="add sufix '-rc' when version isn't released", action="store_true")
+        "--enable-mark-wip", help="add sufix to VERSION when version isn't released. Sufix is set in config file", action="store_true")
     parser.add_argument(
         "--verbose", help="", action="store_true")
 
@@ -55,7 +55,8 @@ if __name__ == "__main__":
     new_release_tag = common.generate_new_version(start_commit, end_commit, args.pattern_name,
                                                   commits_to_release_messages, prefix,
                                                   previous_release_tag, versioning_patterns)
-    if args.enable_rc and new_release_tag not in repo.tags:
-        print(f"{new_release_tag}-rc")
+    if args.enable_mark_wip and new_release_tag not in repo.tags:
+        print(
+            f"{new_release_tag}{versioning_patterns['DEFAULT']['work_in_progress_sufix']}")
     else:
         print(new_release_tag)
