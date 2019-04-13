@@ -17,5 +17,6 @@ int main()
 	std::cout << "\n\n\n" << std::endl;
 	Build::printFullInformation(std::cout);
 	std::cout << std::endl;
+	//TODO obsługa ręcznej zmiany wersji
 	return 0;
 }
