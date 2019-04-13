@@ -49,6 +49,11 @@ Designed to work with pure CLI, Clion, CMake, C++
 - Support change of versioning convention. At some point we decide to change style
 - Check "[What's next](#What's-next-?)"
 
+## Technology stack
+Main technology is Python for easy of use + cross-platform
+Integrations for specific languages:
+- C++ & CMake
+
 # Quick start
 
 - Minimal [C++ example/](cpp/README.md)
