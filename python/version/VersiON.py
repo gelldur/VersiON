@@ -51,7 +51,6 @@ def load_config(config_path=None):
     if config_path is None:
         file_path = Path(os.path.dirname(os.path.abspath(__file__))).parent
         version_patterns = file_path / '..' / 'config' / 'version_patterns.ini'
-        print(version_patterns)
         config.read(version_patterns)
     else:
         config.read(config_path)
