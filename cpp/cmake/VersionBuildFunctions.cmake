@@ -150,7 +150,7 @@ function(version_for target style)
 	git_commit_date(GIT_COMMIT_DATE)
 
 	execute_process(COMMAND
-		"${_VERSION_ROOT}/../tool/get_build_version.py" --pattern-name=${style} --name=${target} --enable-mark-wip
+		"${_VERSION_ROOT}/../python/get_build_version.py" --style-name=${style} --name=${target} --enable-mark-wip
 		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 		OUTPUT_VARIABLE BUILD_VERSION
 		OUTPUT_STRIP_TRAILING_WHITESPACE
