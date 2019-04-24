@@ -17,6 +17,7 @@ class GitHelp(object):
             self.logger.exception(f"Invalid sha1: {head_commit}")
             raise Exception(f"Commit: {head_commit} does not exist in tree?")
 
+        recent_tag = ''
         for tag in  self.repo.git.tag('--sort=-creatordate', f'--merged={head_commit}').split('\n'):
             if prefix is None and len(tag) > 0:
                 recent_tag = tag
@@ -25,7 +26,7 @@ class GitHelp(object):
                 recent_tag = tag
                 break
 
-        if recent_tag is not None and len(recent_tag) > 0:
+        if len(recent_tag) > 0:
             previous_release_tag = recent_tag
             self.logger.info(f"Previous release: {previous_release_tag}")
         else:
