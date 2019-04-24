@@ -28,8 +28,9 @@ def main(args):
     previous_release_tag = git.get_previous_release_tag(args.sha1, versiON.style.config['regex'])
 
     if previous_release_tag is not None and not versiON.match_style(previous_release_tag):
+        current_pattern = versiON.style.config['pattern']
         raise Exception(
-            f"Different version style. Previous release:{previous_release_tag} and currently picked:{versiON.get_pattern()}")
+            f"Different version style. Previous release:{previous_release_tag} and currently picked:{current_pattern}")
 
     commits_to_release_messages = git.get_commits(args.sha1, previous_release_tag)
     if len(commits_to_release_messages) < 1:
