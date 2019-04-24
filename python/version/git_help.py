@@ -1,4 +1,5 @@
 import git
+import re
 import logging
 
 
@@ -16,19 +17,16 @@ class GitHelp(object):
             self.logger.exception(f"Invalid sha1: {head_commit}")
             raise Exception(f"Commit: {head_commit} does not exist in tree?")
 
-        if prefix is None:
-            recent_tag = self.repo.git.tag(
-                '--sort=-creatordate', f'--merged={head_commit}').split('\n', 1)
-        else:
-            self.logger.info(
-                f"Searching for last release tag with prefix: {prefix}")
-            recent_tag = self.repo.git.tag('-l', '--sort=-creatordate',
-                                           f'--merged={head_commit}',
-                                           f'{prefix}*').split('\n', 1)
-            recent_tag = list(filter(None, recent_tag))  # remove empty ones
+        for tag in  self.repo.git.tag('--sort=-creatordate', f'--merged={head_commit}').split('\n'):
+            if prefix is None and len(tag) > 0:
+                recent_tag = tag
+                break
+            elif re.match(prefix, tag):
+                recent_tag = tag
+                break
 
-        if len(recent_tag) > 0:
-            previous_release_tag = recent_tag[0]
+        if recent_tag is not None and len(recent_tag) > 0:
+            previous_release_tag = recent_tag
             self.logger.info(f"Previous release: {previous_release_tag}")
         else:
             previous_release_tag = None
@@ -68,7 +66,7 @@ class GitHelp(object):
             commit = self.repo.git.log(
                 ["-1", "--pretty=format:SHA:%H BODY:%B %N", "{}".format(sha)])
             commits_to_release_messages.append(commit)
-        commits_to_release_messages.reverse() # our assumption
+        commits_to_release_messages.reverse()  # our assumption
         return commits_to_release_messages
 
     def create_tag(self, name, commit_sha):
