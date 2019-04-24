@@ -68,6 +68,7 @@ class GitHelp(object):
             commit = self.repo.git.log(
                 ["-1", "--pretty=format:SHA:%H BODY:%B %N", "{}".format(sha)])
             commits_to_release_messages.append(commit)
+        commits_to_release_messages.reverse() # our assumption
         return commits_to_release_messages
 
     def create_tag(self, name, commit_sha):
