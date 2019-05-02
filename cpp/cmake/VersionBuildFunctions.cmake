@@ -191,7 +191,7 @@ function(version_for target style)
 
 	target_link_libraries(${target} PRIVATE "${target}_version")
 
-	if(${BUILD_VERSION})
+	if(NOT "${BUILD_VERSION}" STREQUAL "")
 		set_target_properties(${target}
 			PROPERTIES
 			VERSION ${BUILD_VERSION}
