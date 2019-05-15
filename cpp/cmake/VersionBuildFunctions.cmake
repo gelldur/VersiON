@@ -169,6 +169,7 @@ function(version_for target style)
 		endif()
 	endif()
 
+	message("VersiON for: " ${target})
 	message("BUILD_VERSION: " ${BUILD_VERSION})
 	message("GIT_LONG_SHA1: " ${GIT_LONG_SHA1})
 	message("GIT_SHORT_SHA1: " ${GIT_SHORT_SHA1})
