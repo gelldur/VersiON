@@ -154,7 +154,11 @@ function(version_for target style)
 		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 		OUTPUT_VARIABLE BUILD_VERSION
 		OUTPUT_STRIP_TRAILING_WHITESPACE
+		RESULT_VARIABLE _exit_code
 		)
+	if(NOT _exit_code EQUAL 0)
+		message(FATAL_ERROR "'version_for' not working. Bad exit code:${_exit_code}")
+	endif()
 
 	if(NOT BUILD_VERSION)
 		message(WARNING "Can't get version")
