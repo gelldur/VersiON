@@ -72,3 +72,6 @@ class GitHelp(object):
 
     def create_tag(self, name, commit_sha):
         self.repo.create_tag(name, commit_sha)
+
+    def is_dirty_repository(self):
+        return self.repo.is_dirty()

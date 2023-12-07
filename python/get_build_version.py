@@ -14,30 +14,36 @@ def main(args):
     if args.name is not None:
         versiON.style.set_variable('{component_name}', args.name)
 
-    logger.info(f"Picked versioning style: {args.style_name}")
+    logger.info(f"Picked versioning style: {args.style_name} with enable WIP: {args.enable_mark_wip}")
 
     git = version.git_help.GitHelp()
 
     previous_release_tag = git.get_previous_release_tag(args.sha1, versiON.style.config['regex'])
+    is_dirty = git.is_dirty_repository()
+    suffix = versiON.config['DEFAULT']['work_in_progress_sufix'] if is_dirty else ""
 
     if previous_release_tag is not None and not versiON.match_style(previous_release_tag):
         current_pattern = versiON.style.config['pattern']
         raise Exception(
             f"Different version style. Previous release:{previous_release_tag} and currently picked:{current_pattern}")
 
+    # Revision version doesn't need commits !
     commits_to_release_messages = git.get_commits(args.sha1, previous_release_tag)
     if len(commits_to_release_messages) < 1:
         logger.info("Nothing to release")
-        print(previous_release_tag)
+        if args.enable_mark_wip:
+            print(f"{previous_release_tag}{suffix}")
+        else:
+            print(previous_release_tag)
+
         return
 
     release_name = versiON.bump_version(
         previous_release_tag, commits_to_release_messages)
 
     if args.enable_mark_wip:
-        logger.info("New version (WIP):")
-        print(
-            f"{release_name}{versiON.config['DEFAULT']['work_in_progress_sufix']}")
+        logger.info(f"New version (WIP): {release_name}")
+        print(f"{release_name}{suffix}")
     else:
         logger.info("New version:")
         print(release_name)
